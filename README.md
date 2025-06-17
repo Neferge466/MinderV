@@ -40,7 +40,7 @@ Maven 3.8+
 安装步骤
 bash
 # 克隆仓库
-git clone https://github.com/yourusername/minderv.git
+git clone https://github.com/Neferge466/MinderV.git
 cd minderv
 
 # 构建项目
