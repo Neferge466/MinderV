@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="30">
+    <Appenders>
+        <!-- 控制台输出 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+        <!-- 文件输出 -->
+        <File name="File" fileName="logs/minderv.log" append="true">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+    </Appenders>
+
+    <Loggers>
+        <!-- 主程序日志配置 -->
+        <Logger name="com.minderv" level="debug" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Logger>
+
+        <!-- 第三方库日志过滤 -->
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
+        </Root>
+    </Loggers>
+</Configuration>
