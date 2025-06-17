@@ -96,7 +96,7 @@ FileUtils.exportScanResults(scanResult, "network_scan");
 
 // 导出CSV格式
 FileUtils.exportScanResultsToCSV(scanResult, "network_scan");
-项目结构
+项目结构'''
 text
 src/
 ├── main/
@@ -134,7 +134,7 @@ src/
         └── com/
             └── minderv/
                 └── tests/                  # 单元测试
-                    └── AppTest.java
+                    └── AppTest.java'''
 贡献指南
 我们欢迎任何形式的贡献！请遵循以下步骤：
 
