@@ -41,7 +41,7 @@ Maven 3.8+
 bash
 # 克隆仓库
 git clone https://github.com/Neferge466/MinderV.git
-cd minderv
+cd MinderV
 
 # 构建项目
 mvn clean package
