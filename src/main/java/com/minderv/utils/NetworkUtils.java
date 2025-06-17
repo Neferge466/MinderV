@@ -1,6 +1,8 @@
 package com.minderv.utils;
 
 import com.minderv.core.model.NetworkSystem;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.net.*;
@@ -75,5 +77,41 @@ public class NetworkUtils {
 
         return interfaces;
     }
+
+
+    /**
+     * 解析域名到 IP 地址
+     * @param domain 要解析的域名
+     * @return 解析后的 IP 地址列表
+     */
+    public static List<String> resolveDomain(String domain) {
+        try {
+            InetAddress[] addresses = InetAddress.getAllByName(domain);
+            return Arrays.stream(addresses)
+                    .map(InetAddress::getHostAddress)
+                    .collect(Collectors.toList());
+        } catch (UnknownHostException e) {
+            logger.warn("无法解析域名: {}", domain, e);
+            return List.of();
+        }
+    }
+
+    /**
+     * 批量解析域名
+     * @param domains 逗号分隔的域名列表
+     * @return 解析后的 IP 地址列表
+     */
+    public static List<String> resolveDomains(String domains) {
+        List<String> resolvedIps = new ArrayList<>();
+        for (String domain : domains.split(",")) {
+            resolvedIps.addAll(resolveDomain(domain.trim()));
+        }
+        return resolvedIps;
+    }
+
+    private static final Logger logger = LogManager.getLogger(NetworkUtils.class);
+
+
+
 }
 

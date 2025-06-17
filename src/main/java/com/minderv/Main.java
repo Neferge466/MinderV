@@ -5,6 +5,7 @@ import com.minderv.core.model.*;
 import com.minderv.monitor.UpdateMonitor;
 import com.minderv.scanners.VulnerabilityScanner;
 import com.minderv.utils.ConfigLoader;
+import com.minderv.utils.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -34,6 +35,11 @@ public class Main {
             VulnerabilityScanner scanner = new VulnerabilityScanner();
             ScanResult scanResult = scanner.performScan(system);
 
+            // 导出扫描结果
+            String exportPrefix = ConfigLoader.get("export.prefix", "minder_scan");
+            FileUtils.exportScanResults(scanResult, exportPrefix);
+            FileUtils.exportScanResultsToCSV(scanResult, exportPrefix);
+
             // 进行风险评估
             RiskAssessor assessor = new RiskAssessor();
             RiskAssessment assessment = assessor.assess(system, scanResult);
@@ -58,7 +64,7 @@ public class Main {
             logger.error("安全违规: {}", e.getMessage());
             System.exit(1);
         } catch (Exception e) {
-            logger.error("致命错误: {}", e.getMessage(), e); // 添加完整的异常堆栈
+            logger.error("致命错误: {}", e.getMessage(), e);
             System.exit(2);
         }
     }
@@ -76,35 +82,25 @@ public class Main {
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             logger.info("更新服务器测试成功，状态码: {}", response.statusCode());
-            return;
         } catch (Exception e) {
-            // 改进的错误处理，提供更具体的错误信息
             String errorMsg = "连接失败: ";
             if (e.getMessage() != null) {
                 errorMsg += e.getMessage();
             } else {
-                errorMsg += e.getClass().getSimpleName();
-
-                // 添加特定异常类型的详细信息
-                if (e instanceof java.net.UnknownHostException) {
-                    errorMsg += " (无法解析主机名)";
-                } else if (e instanceof java.net.ConnectException) {
-                    errorMsg += " (连接被拒绝)";
-                } else if (e instanceof java.net.SocketTimeoutException) {
-                    errorMsg += " (连接超时)";
-                } else if (e instanceof javax.net.ssl.SSLHandshakeException) {
-                    errorMsg += " (SSL握手失败)";
+                Throwable cause = e.getCause();
+                if (cause != null) {
+                    errorMsg += cause.getClass().getSimpleName();
+                    if (cause.getMessage() != null) {
+                        errorMsg += " (" + cause.getMessage() + ")";
+                    }
+                } else {
+                    errorMsg += "无详细错误信息";
                 }
             }
             logger.warn("更新服务器测试失败: {}", errorMsg);
         }
-
-        // 额外诊断：尝试解析URL
-        try {
-            URI.create(url);
-            logger.info("URL格式验证成功: {}", url);
-        } catch (Exception e) {
-            logger.warn("URL格式无效: {}", url);
-        }
     }
 }
+
+
+

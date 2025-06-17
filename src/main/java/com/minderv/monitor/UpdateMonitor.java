@@ -113,8 +113,24 @@ public class UpdateMonitor {
                             response.statusCode(), attempt, retryCount);
                 }
             } catch (Exception e) {
+                // 改进的错误日志记录
+                String errorMsg = e.getClass().getSimpleName() + ": ";
+                if (e.getMessage() != null) {
+                    errorMsg += e.getMessage();
+                } else {
+                    Throwable cause = e.getCause();
+                    if (cause != null) {
+                        errorMsg += cause.getClass().getSimpleName();
+                        if (cause.getMessage() != null) {
+                            errorMsg += " (" + cause.getMessage() + ")";
+                        }
+                    } else {
+                        errorMsg += "无详细错误信息";
+                    }
+                }
+
                 logger.error("更新检查异常 (尝试 {}/{}): {}",
-                        attempt, retryCount, e.getMessage());
+                        attempt, retryCount, errorMsg);
             }
 
             // 重试前等待（最后一次不等待）
