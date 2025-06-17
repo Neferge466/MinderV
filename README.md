@@ -33,8 +33,8 @@ MinderV 是一款专业的网络安全评估工具，旨在帮助安全专业人
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yourusername/minderv.git
-cd minderv
+git clone https://github.com/Neferge466/MinderV.git
+cd MinderV
 
 # 构建项目
 mvn clean package
